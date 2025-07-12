@@ -89,7 +89,7 @@ export default class Player {
       this.height
     );
   }
-  update(input: string) {
+  update(input: Set<string>) {
     this.currentState.handleInput(input);
     // horizontal movement
     this.x += this.speed;
@@ -98,7 +98,7 @@ export default class Player {
       this.x = this.gameWidth - this.width;
     // vertical movement
     this.y += this.vy;
-    if (!this.onGround()) this.vy += this.weight;
+    if (!this.onGround) this.vy += this.weight;
     else this.vy = 0;
     // prevent player from falling through floor
     if (this.y > this.gameHeight - this.height)
@@ -108,7 +108,7 @@ export default class Player {
     this.currentState = this.states[state];
     this.currentState.enter();
   }
-  onGround() {
+  get onGround() {
     return this.y >= this.gameHeight - this.height;
   }
 }

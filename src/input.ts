@@ -1,37 +1,39 @@
 export default class InputHandler {
-  lastKey: string;
+  pressedKeys: Set<string> = new Set();
 
   constructor() {
-    this.lastKey = "";
     window.addEventListener("keydown", (e) => {
       switch (e.key) {
         case "ArrowLeft":
-          this.lastKey = "PRESS left";
+          this.pressedKeys.add("left");
           break;
         case "ArrowRight":
-          this.lastKey = "PRESS right";
+          this.pressedKeys.add("right");
           break;
         case "ArrowUp":
-          this.lastKey = "PRESS up";
+          this.pressedKeys.add("up");
           break;
         case "ArrowDown":
-          this.lastKey = "PRESS down";
+          this.pressedKeys.add("down");
           break;
       }
     });
     window.addEventListener("keyup", (e) => {
       switch (e.key) {
         case "ArrowLeft":
-          this.lastKey = "RELEASE left";
+          this.pressedKeys.delete("left");
           break;
         case "ArrowRight":
-          this.lastKey = "RELEASE right";
+          this.pressedKeys.delete("right");
           break;
         case "ArrowUp":
-          this.lastKey = "RELEASE up";
+          this.pressedKeys.delete("up");
           break;
         case "ArrowDown":
-          this.lastKey = "RELEASE down";
+          this.pressedKeys.delete("down");
+          break;
+        default:
+          this.pressedKeys.clear();
           break;
       }
     });

@@ -7,6 +7,6 @@ export function drawStatusText(
   player: Player
 ) {
   context.font = "28px Helvetica";
-  context.fillText("Last input: " + input.lastKey, 20, 50);
+  context.fillText("Last input: " + Array.from(input.pressedKeys), 20, 50);
   context.fillText("Active state: " + player.currentState.state, 20, 90);
 }
