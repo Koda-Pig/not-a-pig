@@ -29,7 +29,7 @@ img {
 #loading {
   position: absolute;
   font-size: 80px;
-  color: #ffffff;
+  color: white;
 
   &::after {
     position: absolute;
