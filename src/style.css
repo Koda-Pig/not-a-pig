@@ -5,28 +5,21 @@
   font-family: Helvetica, sans-serif;
 }
 
+html,
+body,
+canvas {
+  height: 100%;
+}
+
 body {
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
 canvas {
-  top: 0;
-  left: 0;
   background: linear-gradient(124deg, #2f3c39, #386f62);
   background-size: 400% 400%;
-  animation: bgAnim 100s ease infinite;
-}
-
-@keyframes bgAnim {
-  0% {
-    background-position: 0% 55%;
-  }
-  50% {
-    background-position: 100% 46%;
-  }
-  100% {
-    background-position: 0% 55%;
-  }
 }
 
 img {
@@ -35,8 +28,30 @@ img {
 
 #loading {
   position: absolute;
-  top: 50%;
-  width: 100%;
-  text-align: center;
   font-size: 80px;
+  color: #ffffff;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    color: #60c8af;
+    mask: linear-gradient(
+      90deg,
+      transparent 0%,
+      black 45% 55%,
+      transparent 100%
+    );
+    mask-size: 200% 100%;
+    animation: dots 2s infinite;
+    content: "loading...";
+  }
+}
+
+@keyframes dots {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: -100% 0;
+  }
 }

@@ -30,6 +30,7 @@ window.addEventListener("load", () => {
     accumulator += deltaTime;
 
     if (accumulator >= FRAME_DURATION) {
+      // cap the delta time for performance. See https://stephendoddtech.com/blog/game-design/spiral-of-death-game-loop-javascript
       const cappedDeltaTime = Math.min(accumulator, FRAME_DURATION * 3);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
