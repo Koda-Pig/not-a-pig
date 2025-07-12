@@ -34,7 +34,8 @@ window.addEventListener("load", () => {
       const cappedDeltaTime = Math.min(accumulator, FRAME_DURATION * 3);
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      player.update(input.pressedKeys);
+      input.pollGamepadInput();
+      player.update(input.activeInputs);
       player.draw(ctx, deltaTime);
       drawStatusText(ctx, input, player);
       accumulator -= cappedDeltaTime;

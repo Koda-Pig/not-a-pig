@@ -7,6 +7,12 @@ export function drawStatusText(
   player: Player
 ) {
   context.font = "28px Helvetica";
-  context.fillText("Last input: " + Array.from(input.pressedKeys), 20, 50);
-  context.fillText("Active state: " + player.currentState.state, 20, 90);
+  context.fillText("Keyboard input: " + Array.from(input.pressedKeys), 20, 50);
+  context.fillText("Gamepad input: " + input.activeControllerButtons, 20, 80);
+  context.fillText(
+    "Combined input: " + Array.from(input.activeInputs),
+    20,
+    110
+  );
+  context.fillText("Active state: " + player.currentState.state, 20, 140);
 }
