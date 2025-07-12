@@ -13,17 +13,36 @@ window.addEventListener("load", () => {
   const player = new Player(canvas.width, canvas.height);
   const input = new InputHandler();
 
+  const TARGET_FPS = 60;
+  const FRAME_DURATION = 1000 / TARGET_FPS;
+
   let lastTime = 0;
+  let accumulator = 0;
+
   function animate(timeStamp: number) {
+    if (lastTime === 0) {
+      lastTime = timeStamp;
+      requestAnimationFrame(animate);
+      return;
+    }
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    player.update(input.pressedKeys);
-    player.draw(ctx, deltaTime);
-    drawStatusText(ctx, input, player);
+    accumulator += deltaTime;
+
+    if (accumulator >= FRAME_DURATION) {
+      const cappedDeltaTime = Math.min(accumulator, FRAME_DURATION * 3);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      player.update(input.pressedKeys);
+      player.draw(ctx, deltaTime);
+      drawStatusText(ctx, input, player);
+      accumulator -= cappedDeltaTime;
+    }
+
     requestAnimationFrame(animate);
   }
-  animate(0);
+
+  requestAnimationFrame(animate);
 
   window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
