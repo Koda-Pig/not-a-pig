@@ -37,10 +37,16 @@ export class StandingLeft extends State {
     this.player.speed = 0;
   }
   handleInput(input: Set<string>) {
-    if (input.has("right")) this.player.setState(states.RUNNING_RIGHT);
-    else if (input.has("left")) this.player.setState(states.RUNNING_LEFT);
-    else if (input.has("down")) this.player.setState(states.SITTING_LEFT);
-    else if (input.has("up")) this.player.setState(states.JUMPING_LEFT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_LEFT);
+    } else if (input.has("down")) {
+      this.player.setState(states.SITTING_LEFT);
+    } else if (input.has("left")) {
+      this.player.setState(states.RUNNING_LEFT);
+    } else if (input.has("right")) {
+      this.player.setState(states.RUNNING_RIGHT);
+    }
+    // If no input, stay in STANDING_LEFT
   }
 }
 
@@ -55,10 +61,16 @@ export class StandingRight extends State {
     this.player.speed = 0;
   }
   handleInput(input: Set<string>) {
-    if (input.has("left")) this.player.setState(states.RUNNING_LEFT);
-    else if (input.has("right")) this.player.setState(states.RUNNING_RIGHT);
-    else if (input.has("down")) this.player.setState(states.SITTING_RIGHT);
-    else if (input.has("up")) this.player.setState(states.JUMPING_RIGHT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_RIGHT);
+    } else if (input.has("down")) {
+      this.player.setState(states.SITTING_RIGHT);
+    } else if (input.has("left")) {
+      this.player.setState(states.RUNNING_LEFT);
+    } else if (input.has("right")) {
+      this.player.setState(states.RUNNING_RIGHT);
+    }
+    // If no input, stay in STANDING_RIGHT
   }
 }
 
@@ -73,8 +85,16 @@ export class SittingLeft extends State {
     this.player.speed = 0;
   }
   handleInput(input: Set<string>) {
-    if (input.has("down")) this.player.setState(states.SITTING_LEFT);
-    else if (input.has("down")) this.player.setState(states.STANDING_LEFT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_LEFT);
+    } else if (input.has("right") && !input.has("down")) {
+      // Only turn right if not holding down
+      this.player.setState(states.SITTING_RIGHT);
+    } else if (!input.has("down")) {
+      // Stand up when down is released
+      this.player.setState(states.STANDING_LEFT);
+    }
+    // If down is held, stay sitting
   }
 }
 
@@ -89,8 +109,16 @@ export class SittingRight extends State {
     this.player.speed = 0;
   }
   handleInput(input: Set<string>) {
-    if (input.has("left")) this.player.setState(states.SITTING_LEFT);
-    else if (input.has("down")) this.player.setState(states.STANDING_RIGHT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_RIGHT);
+    } else if (input.has("left") && !input.has("down")) {
+      // Only turn left if not holding down
+      this.player.setState(states.SITTING_LEFT);
+    } else if (!input.has("down")) {
+      // Stand up when down is released
+      this.player.setState(states.STANDING_RIGHT);
+    }
+    // If down is held, stay sitting
   }
 }
 
@@ -105,10 +133,18 @@ export class RunningLeft extends State {
     this.player.speed = -this.player.maxSpeed;
   }
   handleInput(input: Set<string>) {
-    if (input.has("up")) this.player.setState(states.JUMPING_LEFT);
-    else if (input.has("right")) this.player.setState(states.RUNNING_RIGHT);
-    else if (input.has("left")) this.player.setState(states.STANDING_LEFT);
-    else if (input.has("down")) this.player.setState(states.SITTING_LEFT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_LEFT);
+    } else if (input.has("down")) {
+      this.player.setState(states.SITTING_LEFT);
+    } else if (input.has("right") && !input.has("left")) {
+      // Change direction
+      this.player.setState(states.RUNNING_RIGHT);
+    } else if (!input.has("left")) {
+      // Stop running when left is released
+      this.player.setState(states.STANDING_LEFT);
+    }
+    // If left is held, keep running left
   }
 }
 
@@ -123,10 +159,18 @@ export class RunningRight extends State {
     this.player.speed = this.player.maxSpeed;
   }
   handleInput(input: Set<string>) {
-    if (input.has("up")) this.player.setState(states.JUMPING_RIGHT);
-    else if (input.has("left")) this.player.setState(states.RUNNING_LEFT);
-    else if (input.has("right")) this.player.setState(states.STANDING_RIGHT);
-    else if (input.has("down")) this.player.setState(states.SITTING_RIGHT);
+    if (input.has("up")) {
+      this.player.setState(states.JUMPING_RIGHT);
+    } else if (input.has("down")) {
+      this.player.setState(states.SITTING_RIGHT);
+    } else if (input.has("left") && !input.has("right")) {
+      // Change direction
+      this.player.setState(states.RUNNING_LEFT);
+    } else if (!input.has("right")) {
+      // Stop running when right is released
+      this.player.setState(states.STANDING_RIGHT);
+    }
+    // If right is held, keep running right
   }
 }
 
@@ -138,13 +182,34 @@ export class JumpingLeft extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 3;
-    if (this.player.onGround) this.player.vy -= 20;
-    this.player.speed = -this.player.maxSpeed / 2;
+    if (this.player.onGround) {
+      this.player.vy -= 20;
+    }
+    // Don't automatically set speed - let handleInput manage it
   }
   handleInput(input: Set<string>) {
-    if (input.has("right")) this.player.setState(states.JUMPING_RIGHT);
-    else if (this.player.onGround) this.player.setState(states.STANDING_LEFT);
-    else if (this.player.vy > 0) this.player.setState(states.FALLING_LEFT);
+    // Handle horizontal movement in air
+    if (input.has("left") && !input.has("right")) {
+      this.player.speed = -this.player.maxSpeed * 0.7; // Slightly reduced air control
+    } else if (input.has("right") && !input.has("left")) {
+      this.player.speed = this.player.maxSpeed * 0.7;
+      this.player.setState(states.JUMPING_RIGHT); // Face right while moving right
+    } else {
+      this.player.speed = 0; // No horizontal input
+    }
+
+    // Check for landing or falling
+    if (this.player.onGround) {
+      if (input.has("left")) {
+        this.player.setState(states.RUNNING_LEFT);
+      } else if (input.has("right")) {
+        this.player.setState(states.RUNNING_RIGHT);
+      } else {
+        this.player.setState(states.STANDING_LEFT);
+      }
+    } else if (this.player.vy > 0) {
+      this.player.setState(states.FALLING_LEFT);
+    }
   }
 }
 
@@ -156,13 +221,34 @@ export class JumpingRight extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 2;
-    if (this.player.onGround) this.player.vy -= 20;
-    this.player.speed = this.player.maxSpeed / 2;
+    if (this.player.onGround) {
+      this.player.vy -= 20;
+    }
+    // Don't automatically set speed - let handleInput manage it
   }
   handleInput(input: Set<string>) {
-    if (input.has("left")) this.player.setState(states.JUMPING_LEFT);
-    else if (this.player.onGround) this.player.setState(states.STANDING_RIGHT);
-    else if (this.player.vy > 0) this.player.setState(states.FALLING_RIGHT);
+    // Handle horizontal movement in air
+    if (input.has("right") && !input.has("left")) {
+      this.player.speed = this.player.maxSpeed * 0.7; // Slightly reduced air control
+    } else if (input.has("left") && !input.has("right")) {
+      this.player.speed = -this.player.maxSpeed * 0.7;
+      this.player.setState(states.JUMPING_LEFT); // Face left while moving left
+    } else {
+      this.player.speed = 0; // No horizontal input
+    }
+
+    // Check for landing or falling
+    if (this.player.onGround) {
+      if (input.has("right")) {
+        this.player.setState(states.RUNNING_RIGHT);
+      } else if (input.has("left")) {
+        this.player.setState(states.RUNNING_LEFT);
+      } else {
+        this.player.setState(states.STANDING_RIGHT);
+      }
+    } else if (this.player.vy > 0) {
+      this.player.setState(states.FALLING_RIGHT);
+    }
   }
 }
 
@@ -174,10 +260,29 @@ export class FallingLeft extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 5;
+    // Keep current speed for smooth transitions
   }
   handleInput(input: Set<string>) {
-    if (input.has("right")) this.player.setState(states.FALLING_RIGHT);
-    else if (this.player.onGround) this.player.setState(states.STANDING_LEFT);
+    // Handle horizontal movement while falling
+    if (input.has("left") && !input.has("right")) {
+      this.player.speed = -this.player.maxSpeed * 0.7; // Air control
+    } else if (input.has("right") && !input.has("left")) {
+      this.player.speed = this.player.maxSpeed * 0.7;
+      this.player.setState(states.FALLING_RIGHT); // Face right while moving right
+    } else {
+      this.player.speed = 0; // No horizontal input
+    }
+
+    // Check for landing
+    if (this.player.onGround) {
+      if (input.has("left")) {
+        this.player.setState(states.RUNNING_LEFT);
+      } else if (input.has("right")) {
+        this.player.setState(states.RUNNING_RIGHT);
+      } else {
+        this.player.setState(states.STANDING_LEFT);
+      }
+    }
   }
 }
 
@@ -189,9 +294,28 @@ export class FallingRight extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 4;
+    // Keep current speed for smooth transitions
   }
   handleInput(input: Set<string>) {
-    if (input.has("left")) this.player.setState(states.FALLING_LEFT);
-    else if (this.player.onGround) this.player.setState(states.STANDING_RIGHT);
+    // Handle horizontal movement while falling
+    if (input.has("right") && !input.has("left")) {
+      this.player.speed = this.player.maxSpeed * 0.7; // Air control
+    } else if (input.has("left") && !input.has("right")) {
+      this.player.speed = -this.player.maxSpeed * 0.7;
+      this.player.setState(states.FALLING_LEFT); // Face left while moving left
+    } else {
+      this.player.speed = 0; // No horizontal input
+    }
+
+    // Check for landing
+    if (this.player.onGround) {
+      if (input.has("right")) {
+        this.player.setState(states.RUNNING_RIGHT);
+      } else if (input.has("left")) {
+        this.player.setState(states.RUNNING_LEFT);
+      } else {
+        this.player.setState(states.STANDING_RIGHT);
+      }
+    }
   }
 }
