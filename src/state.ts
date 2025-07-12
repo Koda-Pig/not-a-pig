@@ -1,4 +1,19 @@
-export const states = {
+import type { PlayerState, PlayerStateIndex } from "./types";
+import type Player from "./player";
+
+export abstract class State {
+  state: PlayerState;
+  player!: Player;
+
+  constructor(state: PlayerState) {
+    this.state = state;
+  }
+
+  abstract enter(): void;
+  abstract handleInput(input: string): void;
+}
+
+export const states: Record<PlayerState, PlayerStateIndex> = {
   STANDING_LEFT: 0,
   STANDING_RIGHT: 1,
   SITTING_LEFT: 2,
@@ -11,15 +26,9 @@ export const states = {
   FALLING_RIGHT: 9
 };
 
-class State {
-  constructor(state) {
-    this.state = state;
-  }
-}
-
 export class StandingLeft extends State {
-  constructor(player) {
-    super("STANDING LEFT");
+  constructor(player: Player) {
+    super("STANDING_LEFT" as const);
     this.player = player;
   }
   enter() {
@@ -27,7 +36,7 @@ export class StandingLeft extends State {
     this.player.frameY = 1;
     this.player.speed = 0;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS right") this.player.setState(states.RUNNING_RIGHT);
     else if (input === "PRESS left") this.player.setState(states.RUNNING_LEFT);
     else if (input === "PRESS down") this.player.setState(states.SITTING_LEFT);
@@ -36,8 +45,8 @@ export class StandingLeft extends State {
 }
 
 export class StandingRight extends State {
-  constructor(player) {
-    super("STANDING RIGHT");
+  constructor(player: Player) {
+    super("STANDING_RIGHT" as const);
     this.player = player;
   }
   enter() {
@@ -45,7 +54,7 @@ export class StandingRight extends State {
     this.player.frameY = 0;
     this.player.speed = 0;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS left") this.player.setState(states.RUNNING_LEFT);
     else if (input === "PRESS right")
       this.player.setState(states.RUNNING_RIGHT);
@@ -55,8 +64,8 @@ export class StandingRight extends State {
 }
 
 export class SittingLeft extends State {
-  constructor(player) {
-    super("SITTING LEFT");
+  constructor(player: Player) {
+    super("SITTING_LEFT" as const);
     this.player = player;
   }
   enter() {
@@ -64,7 +73,7 @@ export class SittingLeft extends State {
     this.player.frameY = 9;
     this.player.speed = 0;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS down") this.player.setState(states.SITTING_LEFT);
     else if (input == "RELEASE down")
       this.player.setState(states.STANDING_LEFT);
@@ -72,8 +81,8 @@ export class SittingLeft extends State {
 }
 
 export class SittingRight extends State {
-  constructor(player) {
-    super("SITTING RIGHT");
+  constructor(player: Player) {
+    super("SITTING_RIGHT" as const);
     this.player = player;
   }
   enter() {
@@ -81,7 +90,7 @@ export class SittingRight extends State {
     this.player.frameY = 8;
     this.player.speed = 0;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS left") this.player.setState(states.SITTING_LEFT);
     else if (input == "RELEASE down")
       this.player.setState(states.STANDING_RIGHT);
@@ -89,8 +98,8 @@ export class SittingRight extends State {
 }
 
 export class RunningLeft extends State {
-  constructor(player) {
-    super("RUNNING LEFT");
+  constructor(player: Player) {
+    super("RUNNING_LEFT" as const);
     this.player = player;
   }
   enter() {
@@ -98,7 +107,7 @@ export class RunningLeft extends State {
     this.player.frameY = 7;
     this.player.speed = -this.player.maxSpeed;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS right") this.player.setState(states.RUNNING_RIGHT);
     else if (input == "RELEASE left")
       this.player.setState(states.STANDING_LEFT);
@@ -107,8 +116,8 @@ export class RunningLeft extends State {
 }
 
 export class RunningRight extends State {
-  constructor(player) {
-    super("RUNNING RIGHT");
+  constructor(player: Player) {
+    super("RUNNING_RIGHT" as const);
     this.player = player;
   }
   enter() {
@@ -116,7 +125,7 @@ export class RunningRight extends State {
     this.player.frameY = 6;
     this.player.speed = this.player.maxSpeed;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input == "PRESS left") this.player.setState(states.RUNNING_LEFT);
     else if (input == "RELEASE right")
       this.player.setState(states.STANDING_RIGHT);
@@ -125,8 +134,8 @@ export class RunningRight extends State {
 }
 
 export class JumpingLeft extends State {
-  constructor(player) {
-    super("JUMPING LEFT");
+  constructor(player: Player) {
+    super("JUMPING_LEFT" as const);
     this.player = player;
   }
   enter() {
@@ -135,7 +144,7 @@ export class JumpingLeft extends State {
     if (this.player.onGround()) this.player.vy -= 20;
     this.player.speed = -this.player.maxSpeed / 2;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input === "PRESS right") this.player.setState(states.JUMPING_RIGHT);
     else if (this.player.onGround()) this.player.setState(states.STANDING_LEFT);
     else if (this.player.vy > 0) this.player.setState(states.FALLING_LEFT);
@@ -143,8 +152,8 @@ export class JumpingLeft extends State {
 }
 
 export class JumpingRight extends State {
-  constructor(player) {
-    super("JUMPING RIGHT");
+  constructor(player: Player) {
+    super("JUMPING_RIGHT" as const);
     this.player = player;
   }
   enter() {
@@ -153,7 +162,7 @@ export class JumpingRight extends State {
     if (this.player.onGround()) this.player.vy -= 20;
     this.player.speed = this.player.maxSpeed / 2;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input === "PRESS left") this.player.setState(states.JUMPING_LEFT);
     else if (this.player.onGround())
       this.player.setState(states.STANDING_RIGHT);
@@ -162,30 +171,30 @@ export class JumpingRight extends State {
 }
 
 export class FallingLeft extends State {
-  constructor(player) {
-    super("FALLING LEFT");
+  constructor(player: Player) {
+    super("FALLING_LEFT" as const);
     this.player = player;
   }
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 5;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input === "PRESS right") this.player.setState(states.FALLING_RIGHT);
     else if (this.player.onGround()) this.player.setState(states.STANDING_LEFT);
   }
 }
 
 export class FallingRight extends State {
-  constructor(player) {
-    super("FALLING RIGHT");
+  constructor(player: Player) {
+    super("FALLING_RIGHT" as const);
     this.player = player;
   }
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 4;
   }
-  handleInput(input) {
+  handleInput(input: string) {
     if (input === "PRESS left") this.player.setState(states.FALLING_LEFT);
     else if (this.player.onGround())
       this.player.setState(states.STANDING_RIGHT);

@@ -1,11 +1,11 @@
 import Player from "./player";
-import { ResizeWindow, drawStatusText } from "./utils";
+import { drawStatusText } from "./utils";
 import InputHandler from "./input";
 
 window.addEventListener("load", () => {
-  const canvas = document.querySelector("canvas");
-  const ctx = canvas.getContext("2d");
-  const loading = document.getElementById("loading");
+  const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+  const loading = document.getElementById("loading") as HTMLHeadingElement;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   loading.style.display = "none";
@@ -14,7 +14,7 @@ window.addEventListener("load", () => {
   const input = new InputHandler();
 
   let lastTime = 0;
-  function animate(timeStamp) {
+  function animate(timeStamp: number) {
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -25,5 +25,8 @@ window.addEventListener("load", () => {
   }
   animate(0);
 
-  ResizeWindow(canvas.width, canvas.height);
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
 });

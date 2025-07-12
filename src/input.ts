@@ -1,4 +1,6 @@
 export default class InputHandler {
+  lastKey: string;
+
   constructor() {
     this.lastKey = "";
     window.addEventListener("keydown", (e) => {

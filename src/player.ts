@@ -10,9 +10,31 @@ import {
   FallingLeft,
   FallingRight
 } from "./state";
+import type { PlayerStateIndex } from "./types";
+import type { State } from "./state";
 
 export default class Player {
-  constructor(gameWidth, gameHeight) {
+  gameWidth: number;
+  gameHeight: number;
+  states: State[];
+  currentState: State;
+  image: HTMLImageElement;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  vy: number;
+  weight: number;
+  frameX: number;
+  frameY: number;
+  maxFrame: number;
+  speed: number;
+  maxSpeed: number;
+  fps: number;
+  frameTimer: number;
+  frameInterval: number;
+
+  constructor(gameWidth: number, gameHeight: number) {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.states = [
@@ -28,7 +50,10 @@ export default class Player {
       new FallingRight(this)
     ];
     this.currentState = this.states[1];
-    this.image = document.getElementById("dogImg");
+    if (!document.getElementById("dogImg")) {
+      throw new Error("Dog image not found");
+    }
+    this.image = document.getElementById("dogImg") as HTMLImageElement;
     this.width = 200;
     this.height = 181.83;
     this.x = this.gameWidth / 2 - this.width / 2;
@@ -44,7 +69,7 @@ export default class Player {
     this.frameTimer = 0;
     this.frameInterval = 1000 / this.fps;
   }
-  draw(context, deltaTime) {
+  draw(context: CanvasRenderingContext2D, deltaTime: number) {
     if (this.frameTimer > this.frameInterval) {
       if (this.frameX < this.maxFrame) this.frameX++;
       else this.frameX = 0;
@@ -64,7 +89,7 @@ export default class Player {
       this.height
     );
   }
-  update(input) {
+  update(input: string) {
     this.currentState.handleInput(input);
     // horizontal movement
     this.x += this.speed;
@@ -79,7 +104,7 @@ export default class Player {
     if (this.y > this.gameHeight - this.height)
       this.y = this.gameHeight - this.height;
   }
-  setState(state) {
+  setState(state: PlayerStateIndex) {
     this.currentState = this.states[state];
     this.currentState.enter();
   }
