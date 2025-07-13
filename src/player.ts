@@ -106,6 +106,7 @@ export default class Player {
   }
   setState(state: PlayerStateIndex) {
     this.currentState = this.states[state];
+    this.frameX = 0; // Reset frame to 0 when state changes
     this.currentState.enter();
   }
   get onGround() {
