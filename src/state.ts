@@ -61,6 +61,7 @@ export class StandingRight extends State {
     this.player.speed = 0;
   }
   handleInput(input: Set<string>) {
+    // console.log(input);
     if (input.has("up")) {
       this.player.setState(states.JUMPING_RIGHT);
     } else if (input.has("down")) {

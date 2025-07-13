@@ -1,6 +1,7 @@
 export default class InputHandler {
   pressedKeys: Set<string> = new Set();
   activeControllerButtons: string[] = [];
+  previousButtonStates: boolean[] = [];
   gamepadKeyMap: { [key: number]: string } = {
     12: "up", // D-pad up
     13: "down", // D-pad down
@@ -53,29 +54,29 @@ export default class InputHandler {
 
     const gamepad = gamepads[0];
 
-    gamepad.buttons.forEach((button, index) => {
+    for (const [index, button] of gamepad.buttons.entries()) {
       const action = this.gamepadKeyMap[index];
-      if (index === 0 && button.pressed) {
-        console.log("pressed a button");
-        return;
-      }
+      const isPressed = button.pressed;
+      const wasPressed = this.previousButtonStates[index] || false;
 
-      if (button.pressed) {
+      if (isPressed && !wasPressed) {
         if (this.activeControllerButtons.includes(action)) return;
         this.activeControllerButtons.unshift(action);
-      } else {
+      } else if (!isPressed && wasPressed) {
         this.activeControllerButtons = this.activeControllerButtons.filter(
           (button) => button !== action
         );
       }
-    });
+
+      this.previousButtonStates[index] = isPressed;
+    }
 
     // Handle analog stick input (axes 0 and 1)
     const leftStickX = gamepad.axes[0];
     const leftStickY = gamepad.axes[1];
 
     // Add deadzone to prevent drift
-    const deadzone = 0.1;
+    const deadzone = 0.5;
 
     if (Math.abs(leftStickX) > deadzone) {
       if (leftStickX < 0 && !this.activeControllerButtons.includes("left")) {
