@@ -48,7 +48,7 @@ export default class InputHandler {
     });
   }
 
-  pollGamepadInput() {
+  pollGamepadInput(deadzone: number) {
     const gamepads = navigator.getGamepads();
     if (!gamepads?.[0]) return;
 
@@ -74,9 +74,6 @@ export default class InputHandler {
     // Handle analog stick input (axes 0 and 1)
     const leftStickX = gamepad.axes[0];
     const leftStickY = gamepad.axes[1];
-
-    // Add deadzone to prevent drift
-    const deadzone = 0.55;
 
     if (Math.abs(leftStickX) > deadzone) {
       if (leftStickX < 0 && !this.activeControllerButtons.includes("left")) {
