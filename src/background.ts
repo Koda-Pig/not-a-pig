@@ -16,25 +16,30 @@ export default class Background {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.images = images;
-    this.width = 200;
-    this.height = 181.83;
-    this.x = this.gameWidth / 2 - this.width / 2;
-    this.y = this.gameHeight - this.height;
+    // Set background to cover the entire canvas
+    this.width = gameWidth;
+    this.height = gameHeight;
+    // Position at top-left corner to cover full screen
+    this.x = 0;
+    this.y = 0;
     this.fps = 30;
   }
+
   draw(context: CanvasRenderingContext2D, deltaTime: number) {
+    // Fix drawImage parameters: (image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     context.drawImage(
       this.images[0],
-      this.width,
-      this.height,
-      this.width,
-      this.height,
+      0,
+      0,
+      this.images[0].width,
+      this.images[0].height, // source rectangle
       this.x,
       this.y,
       this.width,
-      this.height
+      this.height // destination rectangle
     );
   }
+
   update(input: Set<string>) {
     // horizontal movement
   }

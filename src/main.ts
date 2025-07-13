@@ -56,8 +56,8 @@ window.addEventListener("load", () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       input.pollGamepadInput(parseFloat(deadzoneInput.value));
-      // background.update(input.activeInputs);
-      // background.draw(ctx, deltaTime);
+      background.update(input.activeInputs);
+      background.draw(ctx, deltaTime);
       player.update(input.activeInputs);
       player.draw(ctx, deltaTime);
       drawStatusText(ctx, input, player);
@@ -77,5 +77,10 @@ window.addEventListener("load", () => {
   window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    // Update background dimensions when window resizes
+    background.gameWidth = canvas.width;
+    background.gameHeight = canvas.height;
+    background.width = canvas.width;
+    background.height = canvas.height;
   });
 });
