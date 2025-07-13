@@ -7,6 +7,7 @@ export default class Background {
   x: number;
   y: number;
   fps: number;
+  sceneOffset: number;
 
   constructor(
     gameWidth: number,
@@ -17,27 +18,44 @@ export default class Background {
     this.gameHeight = gameHeight;
     this.images = images;
     // Set background to cover the entire canvas
-    this.width = gameWidth;
-    this.height = gameHeight;
+    this.width = 1920;
+    this.height = 1080;
     // Position at top-left corner to cover full screen
     this.x = 0;
     this.y = 0;
     this.fps = 30;
+    this.sceneOffset = 0;
   }
 
   draw(context: CanvasRenderingContext2D, deltaTime: number) {
-    // Fix drawImage parameters: (image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-    context.drawImage(
-      this.images[0],
-      0,
-      0,
-      this.images[0].width,
-      this.images[0].height, // source rectangle
-      this.x,
-      this.y,
-      this.width,
-      this.height // destination rectangle
-    );
+    // Calculate the scale to cover the height of the canvas
+    const scale = this.gameHeight / this.height;
+
+    // Calculate the scaled width and height
+    const scaledWidth = this.width * scale;
+    const scaledHeight = this.gameHeight; // Use the height of the canvas
+
+    // Draw all images in a loop to cover the entire canvas width
+    for (let i = 0; i < this.images.length; i++) {
+      // Update the x position of the background for parallax effect
+      // Each layer has a different speed for parallax effect
+      const speed = i * 0.05; // Speed increases for each layer
+      this.x = -(this.sceneOffset * 2 * speed) % scaledWidth;
+
+      for (let x = this.x; x < this.gameWidth; x += scaledWidth) {
+        context.drawImage(
+          this.images[i],
+          0, // Source X
+          0, // Source Y
+          this.width, // Source Width
+          this.height, // Source Height
+          x, // Destination X
+          0, // Destination Y
+          scaledWidth, // Destination Width
+          scaledHeight // Destination Height
+        );
+      }
+    }
   }
 
   update(input: Set<string>) {
