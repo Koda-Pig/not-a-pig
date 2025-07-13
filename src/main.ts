@@ -1,6 +1,7 @@
 import Player from "./player";
 import { drawStatusText, renderControllerSettings } from "./utils";
 import InputHandler from "./input";
+import Background from "./background";
 
 window.addEventListener("load", () => {
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
@@ -18,12 +19,20 @@ window.addEventListener("load", () => {
   ) as HTMLOutputElement;
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   const loading = document.getElementById("loading") as HTMLHeadingElement;
+  const backgroundImages = document.querySelectorAll(
+    ".bg-img"
+  ) as NodeListOf<HTMLImageElement>;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   loading.style.display = "none";
 
   const player = new Player(canvas.width, canvas.height);
   const input = new InputHandler();
+  const background = new Background(
+    canvas.width,
+    canvas.height,
+    Array.from(backgroundImages)
+  );
 
   const TARGET_FPS = 60;
   const FRAME_DURATION = 1000 / TARGET_FPS;
@@ -47,6 +56,8 @@ window.addEventListener("load", () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       input.pollGamepadInput(parseFloat(deadzoneInput.value));
+      // background.update(input.activeInputs);
+      // background.draw(ctx, deltaTime);
       player.update(input.activeInputs);
       player.draw(ctx, deltaTime);
       drawStatusText(ctx, input, player);

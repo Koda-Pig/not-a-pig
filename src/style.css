@@ -22,7 +22,7 @@ canvas {
   background-size: 400% 400%;
 }
 
-img {
+.hidden {
   display: none;
 }
 
