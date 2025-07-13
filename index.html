@@ -16,6 +16,23 @@
       alt="dog"
     />
     <h1 id="loading">loading...</h1>
+    <fieldset id="controllerSettings">
+      <label for="deadzone"
+        >controller deadzone
+        <output id="deadzoneOutput">0.55</output>
+      </label>
+      <div class="controller-settings">
+        <input
+          id="deadzone"
+          type="range"
+          min="0"
+          max="1"
+          value="0.55"
+          step="0.01"
+        />
+        <span id="fakeRange" class="fake-range"></span>
+      </div>
+    </fieldset>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

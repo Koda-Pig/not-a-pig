@@ -26,6 +26,59 @@ img {
   display: none;
 }
 
+fieldset {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  gap: 0.25rem;
+  color: white;
+  letter-spacing: 0.05em;
+  border: none;
+
+  label {
+    width: 200px;
+    opacity: 0.6;
+    output {
+      font-size: 0.9em;
+    }
+  }
+
+  .controller-settings {
+    display: grid;
+    place-items: center;
+    position: relative;
+
+    .fake-range {
+      --deadzone: 0.55;
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+      inset: 0;
+      margin: auto;
+      display: block;
+      border: 1px solid;
+      border-image: linear-gradient(to right, #000, transparent) 1;
+
+      &::after {
+        content: "";
+        --br: calc(20px - (var(--deadzone) * 20px));
+        position: absolute;
+        background-color: red;
+        inset: 0;
+        width: max(10px, calc(var(--deadzone) * 100%));
+        border-radius: 0 var(--br) var(--br) 0;
+      }
+    }
+
+    input {
+      cursor: pointer;
+      opacity: 0;
+      width: 100%;
+    }
+  }
+}
+
 #loading {
   position: absolute;
   font-size: 80px;

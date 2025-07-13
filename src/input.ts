@@ -76,7 +76,7 @@ export default class InputHandler {
     const leftStickY = gamepad.axes[1];
 
     // Add deadzone to prevent drift
-    const deadzone = 0.5;
+    const deadzone = 0.55;
 
     if (Math.abs(leftStickX) > deadzone) {
       if (leftStickX < 0 && !this.activeControllerButtons.includes("left")) {

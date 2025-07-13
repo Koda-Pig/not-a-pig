@@ -16,3 +16,13 @@ export function drawStatusText(
   );
   context.fillText("Active state: " + player.currentState.state, 20, 140);
 }
+
+export function renderControllerSettings(
+  input: HTMLInputElement,
+  output: HTMLOutputElement,
+  fakeRange: HTMLSpanElement
+) {
+  const val = parseFloat(input.value);
+  output.innerText = `${(val * 100).toFixed(0)}`;
+  fakeRange.style.setProperty("--deadzone", input.value);
+}

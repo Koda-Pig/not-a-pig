@@ -1,9 +1,21 @@
 import Player from "./player";
-import { drawStatusText } from "./utils";
+import { drawStatusText, renderControllerSettings } from "./utils";
 import InputHandler from "./input";
 
 window.addEventListener("load", () => {
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+  const controllerSettings = document.getElementById(
+    "controllerSettings"
+  ) as HTMLFieldSetElement;
+  const fakeRange = controllerSettings.querySelector(
+    "#fakeRange"
+  ) as HTMLSpanElement;
+  const deadzoneInput = controllerSettings.querySelector(
+    "#deadzone"
+  ) as HTMLInputElement;
+  const deadzoneOutput = controllerSettings.querySelector(
+    "#deadzoneOutput"
+  ) as HTMLOutputElement;
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   const loading = document.getElementById("loading") as HTMLHeadingElement;
   canvas.width = window.innerWidth;
@@ -45,6 +57,11 @@ window.addEventListener("load", () => {
   }
 
   requestAnimationFrame(animate);
+  renderControllerSettings(deadzoneInput, deadzoneOutput, fakeRange);
+
+  deadzoneInput.addEventListener("input", () => {
+    renderControllerSettings(deadzoneInput, deadzoneOutput, fakeRange);
+  });
 
   window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
