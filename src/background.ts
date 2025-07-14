@@ -61,6 +61,10 @@ export default class Background {
   update(input: Set<string>) {
     // horizontal movement - move background instead of player
     const moveSpeed = 5;
+    if (input.has("down")) {
+      // do nothing if user is sitting.
+      return;
+    }
     if (input.has("left")) {
       this.sceneOffset -= moveSpeed; // Move background left when player presses left
     } else if (input.has("right")) {

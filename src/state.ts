@@ -191,6 +191,11 @@ export class JumpingLeft extends State {
     // No horizontal movement in air - background moves instead
     this.player.speed = 0;
 
+    // Allow direction change while jumping
+    if (input.has("right") && !input.has("left")) {
+      this.player.setState(states.JUMPING_RIGHT);
+    }
+
     // Check for landing or falling
     if (this.player.onGround) {
       if (input.has("left")) {
@@ -223,6 +228,11 @@ export class JumpingRight extends State {
     // No horizontal movement in air - background moves instead
     this.player.speed = 0;
 
+    // Allow direction change while jumping
+    if (input.has("left") && !input.has("right")) {
+      this.player.setState(states.JUMPING_LEFT);
+    }
+
     // Check for landing or falling
     if (this.player.onGround) {
       if (input.has("right")) {
@@ -252,6 +262,11 @@ export class FallingLeft extends State {
     // No horizontal movement while falling - background moves instead
     this.player.speed = 0;
 
+    // Allow direction change while falling
+    if (input.has("right") && !input.has("left")) {
+      this.player.setState(states.FALLING_RIGHT);
+    }
+
     // Check for landing
     if (this.player.onGround) {
       if (input.has("left")) {
@@ -278,6 +293,11 @@ export class FallingRight extends State {
   handleInput(input: Set<string>) {
     // No horizontal movement while falling - background moves instead
     this.player.speed = 0;
+
+    // Allow direction change while falling
+    if (input.has("left") && !input.has("right")) {
+      this.player.setState(states.FALLING_LEFT);
+    }
 
     // Check for landing
     if (this.player.onGround) {
