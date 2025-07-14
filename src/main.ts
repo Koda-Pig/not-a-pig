@@ -54,7 +54,7 @@ window.addEventListener("load", () => {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       input.pollGamepadInput(parseFloat(deadzoneInput.value));
-      background.update(input.activeInputs);
+      background.update(player.currentState.state);
       background.draw(ctx);
       player.update(input.activeInputs);
       player.draw(ctx, deltaTime);

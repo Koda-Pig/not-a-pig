@@ -12,7 +12,6 @@ export default class InputHandler {
 
   constructor() {
     window.addEventListener("keydown", (e) => {
-      console.log(e.key === " ");
       switch (e.key) {
         case "ArrowLeft":
           this.pressedKeys.add("left");

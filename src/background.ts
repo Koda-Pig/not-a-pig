@@ -1,3 +1,5 @@
+import type { PlayerState } from "./types";
+
 export default class Background {
   gameWidth: number;
   gameHeight: number;
@@ -58,17 +60,22 @@ export default class Background {
     }
   }
 
-  update(input: Set<string>) {
+  update(playerState: PlayerState) {
     // horizontal movement - move background instead of player
     const moveSpeed = 5;
-    if (input.has("down")) {
-      // do nothing if user is sitting.
-      return;
-    }
-    if (input.has("left")) {
-      this.sceneOffset -= moveSpeed; // Move background left when player presses left
-    } else if (input.has("right")) {
-      this.sceneOffset += moveSpeed; // Move background right when player presses right
+    switch (playerState) {
+      case "RUNNING_LEFT":
+      case "JUMPING_LEFT":
+      case "FALLING_LEFT":
+        this.sceneOffset -= moveSpeed; // Move background left when player presses left
+        break;
+      case "RUNNING_RIGHT":
+      case "JUMPING_RIGHT":
+      case "FALLING_RIGHT":
+        this.sceneOffset += moveSpeed; // Move background right when player presses right
+        break;
+      default:
+        break;
     }
   }
 }

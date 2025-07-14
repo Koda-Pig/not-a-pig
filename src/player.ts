@@ -98,8 +98,9 @@ export default class Player {
     if (!this.onGround) this.vy += this.weight;
     else this.vy = 0;
     // prevent player from falling through floor
-    if (this.y > this.gameHeight - this.height)
+    if (this.y > this.gameHeight - this.height) {
       this.y = this.gameHeight - this.height;
+    }
   }
   setState(state: PlayerStateIndex) {
     this.currentState = this.states[state];
