@@ -65,7 +65,7 @@ export default class Player {
     this.maxFrame = 6;
     this.speed = 0;
     this.maxSpeed = 20;
-    this.fps = 30;
+    this.fps = 60;
     this.frameTimer = 0;
     this.frameInterval = 1000 / this.fps;
   }
@@ -91,11 +91,8 @@ export default class Player {
   }
   update(input: Set<string>) {
     this.currentState.handleInput(input);
-    // horizontal movement
-    this.x += this.speed;
-    if (this.x <= 0) this.x = 0;
-    else if (this.x >= this.gameWidth - this.width)
-      this.x = this.gameWidth - this.width;
+    // Keep player in center of screen - no horizontal movement
+    this.x = this.gameWidth / 2 - this.width / 2;
     // vertical movement
     this.y += this.vy;
     if (!this.onGround) this.vy += this.weight;

@@ -23,11 +23,11 @@ export default class Background {
     // Position at top-left corner to cover full screen
     this.x = 0;
     this.y = 0;
-    this.fps = 30;
+    this.fps = 60;
     this.sceneOffset = 0;
   }
 
-  draw(context: CanvasRenderingContext2D, deltaTime: number) {
+  draw(context: CanvasRenderingContext2D) {
     // Calculate the scale to cover the height of the canvas
     const scale = this.gameHeight / this.height;
 
@@ -59,6 +59,12 @@ export default class Background {
   }
 
   update(input: Set<string>) {
-    // horizontal movement
+    // horizontal movement - move background instead of player
+    const moveSpeed = 5;
+    if (input.has("left")) {
+      this.sceneOffset -= moveSpeed; // Move background left when player presses left
+    } else if (input.has("right")) {
+      this.sceneOffset += moveSpeed; // Move background right when player presses right
+    }
   }
 }

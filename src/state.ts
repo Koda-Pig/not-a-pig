@@ -130,7 +130,7 @@ export class RunningLeft extends State {
   enter() {
     this.player.maxFrame = 8;
     this.player.frameY = 7;
-    this.player.speed = -this.player.maxSpeed;
+    this.player.speed = 0; // No horizontal movement (move background instead)
   }
   handleInput(input: Set<string>) {
     if (input.has("up")) {
@@ -156,7 +156,7 @@ export class RunningRight extends State {
   enter() {
     this.player.maxFrame = 8;
     this.player.frameY = 6;
-    this.player.speed = this.player.maxSpeed;
+    this.player.speed = 0; // No horizontal movement
   }
   handleInput(input: Set<string>) {
     if (input.has("up")) {
@@ -185,18 +185,11 @@ export class JumpingLeft extends State {
     if (this.player.onGround) {
       this.player.vy -= 20;
     }
-    // Don't automatically set speed - let handleInput manage it
+    this.player.speed = 0; // No horizontal movement
   }
   handleInput(input: Set<string>) {
-    // Handle horizontal movement in air
-    if (input.has("left") && !input.has("right")) {
-      this.player.speed = -this.player.maxSpeed * 0.7; // Slightly reduced air control
-    } else if (input.has("right") && !input.has("left")) {
-      this.player.speed = this.player.maxSpeed * 0.7;
-      this.player.setState(states.JUMPING_RIGHT); // Face right while moving right
-    } else {
-      this.player.speed = 0; // No horizontal input
-    }
+    // No horizontal movement in air - background moves instead
+    this.player.speed = 0;
 
     // Check for landing or falling
     if (this.player.onGround) {
@@ -224,18 +217,11 @@ export class JumpingRight extends State {
     if (this.player.onGround) {
       this.player.vy -= 20;
     }
-    // Don't automatically set speed - let handleInput manage it
+    this.player.speed = 0; // No horizontal movement
   }
   handleInput(input: Set<string>) {
-    // Handle horizontal movement in air
-    if (input.has("right") && !input.has("left")) {
-      this.player.speed = this.player.maxSpeed * 0.7; // Slightly reduced air control
-    } else if (input.has("left") && !input.has("right")) {
-      this.player.speed = -this.player.maxSpeed * 0.7;
-      this.player.setState(states.JUMPING_LEFT); // Face left while moving left
-    } else {
-      this.player.speed = 0; // No horizontal input
-    }
+    // No horizontal movement in air - background moves instead
+    this.player.speed = 0;
 
     // Check for landing or falling
     if (this.player.onGround) {
@@ -260,18 +246,11 @@ export class FallingLeft extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 5;
-    // Keep current speed for smooth transitions
+    this.player.speed = 0; // No horizontal movement
   }
   handleInput(input: Set<string>) {
-    // Handle horizontal movement while falling
-    if (input.has("left") && !input.has("right")) {
-      this.player.speed = -this.player.maxSpeed * 0.7; // Air control
-    } else if (input.has("right") && !input.has("left")) {
-      this.player.speed = this.player.maxSpeed * 0.7;
-      this.player.setState(states.FALLING_RIGHT); // Face right while moving right
-    } else {
-      this.player.speed = 0; // No horizontal input
-    }
+    // No horizontal movement while falling - background moves instead
+    this.player.speed = 0;
 
     // Check for landing
     if (this.player.onGround) {
@@ -294,18 +273,11 @@ export class FallingRight extends State {
   enter() {
     this.player.maxFrame = 6;
     this.player.frameY = 4;
-    // Keep current speed for smooth transitions
+    this.player.speed = 0; // No horizontal movement
   }
   handleInput(input: Set<string>) {
-    // Handle horizontal movement while falling
-    if (input.has("right") && !input.has("left")) {
-      this.player.speed = this.player.maxSpeed * 0.7; // Air control
-    } else if (input.has("left") && !input.has("right")) {
-      this.player.speed = -this.player.maxSpeed * 0.7;
-      this.player.setState(states.FALLING_LEFT); // Face left while moving left
-    } else {
-      this.player.speed = 0; // No horizontal input
-    }
+    // No horizontal movement while falling - background moves instead
+    this.player.speed = 0;
 
     // Check for landing
     if (this.player.onGround) {
