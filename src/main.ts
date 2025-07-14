@@ -2,6 +2,7 @@ import Player from "./player";
 import { drawStatusText, renderControllerSettings } from "./utils";
 import InputHandler from "./input";
 import Background from "./background";
+import { FRAME_DURATION } from "./constants";
 
 window.addEventListener("load", () => {
   const canvas = document.querySelector("canvas") as HTMLCanvasElement;
@@ -33,9 +34,6 @@ window.addEventListener("load", () => {
     canvas.height,
     Array.from(backgroundImages)
   );
-
-  const TARGET_FPS = 60;
-  const FRAME_DURATION = 1000 / TARGET_FPS;
 
   let lastTime = 0;
   let accumulator = 0;
