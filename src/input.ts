@@ -12,6 +12,7 @@ export default class InputHandler {
 
   constructor() {
     window.addEventListener("keydown", (e) => {
+      console.log(e.key === " ");
       switch (e.key) {
         case "ArrowLeft":
           this.pressedKeys.add("left");
@@ -20,6 +21,7 @@ export default class InputHandler {
           this.pressedKeys.add("right");
           break;
         case "ArrowUp":
+        case " ":
           this.pressedKeys.add("up");
           break;
         case "ArrowDown":
@@ -36,6 +38,7 @@ export default class InputHandler {
           this.pressedKeys.delete("right");
           break;
         case "ArrowUp":
+        case " ":
           this.pressedKeys.delete("up");
           break;
         case "ArrowDown":
